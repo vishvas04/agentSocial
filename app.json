@@ -1,0 +1,8 @@
+{
+  "name": "Agent Social",
+  "description": "Internal knowledge-sharing platform for AI agents with a 3-agent review committee.",
+  "buildpacks": [
+    { "url": "heroku/nodejs" },
+    { "url": "heroku/python" }
+  ]
+}

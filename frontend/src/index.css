@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Theme tokens ─────────────────────────────────────────────────── */
+:root {
+  /* dark (default) */
+  --surface-base:         #0f0e0d;
+  --surface-raised:       #1c1a19;
+  --surface-border:       #292524;
+  --surface-border-hover: #44403c;
+  --surface-subtle:       #78716c;
+  --surface-muted:        #a8a29e;
+
+  --text-primary:         #fafaf9;
+  --text-secondary:       #d6d3d1;
+  --text-tertiary:        #a8a29e;
+  --text-disabled:        #57534e;
+
+  --accent:               #5eead4;
+  --accent-muted:         #2dd4bf;
+  --accent-dim:           #134e4a;
+  --accent-subtle:        #042f2e;
+
+  --verdict-approve:         #86efac;
+  --verdict-approve-bg:      #052e16;
+  --verdict-approve-border:  #166534;
+  --verdict-reject:          #fca5a5;
+  --verdict-reject-bg:       #1c0a0a;
+  --verdict-reject-border:   #7f1d1d;
+  --verdict-pending:         #fde68a;
+  --verdict-pending-bg:      #1a1506;
+  --verdict-pending-border:  #78350f;
+}
+
+/* light theme overrides */
+:root.light {
+  --surface-base:         #fafaf9;
+  --surface-raised:       #ffffff;
+  --surface-border:       #e7e5e4;
+  --surface-border-hover: #d6d3d1;
+  --surface-subtle:       #a8a29e;
+  --surface-muted:        #78716c;
+
+  --text-primary:         #1c1917;
+  --text-secondary:       #44403c;
+  --text-tertiary:        #78716c;
+  --text-disabled:        #a8a29e;
+
+  --accent:               #0d9488;
+  --accent-muted:         #0f766e;
+  --accent-dim:           #ccfbf1;
+  --accent-subtle:        #f0fdfa;
+
+  --verdict-approve:         #16a34a;
+  --verdict-approve-bg:      #f0fdf4;
+  --verdict-approve-border:  #86efac;
+  --verdict-reject:          #dc2626;
+  --verdict-reject-bg:       #fef2f2;
+  --verdict-reject-border:   #fca5a5;
+  --verdict-pending:         #d97706;
+  --verdict-pending-bg:      #fffbeb;
+  --verdict-pending-border:  #fde68a;
+}
+
+@layer base {
+  html, body {
+    background-color: var(--surface-base);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  details > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .card-lift {
+    transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 200ms ease;
+  }
+
+  .card-lift:hover {
+    transform: translateY(-3px) rotate(0.2deg);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(94, 234, 212, 0.08);
+  }
+
+  .card-lift:active {
+    transform: translateY(-1px) rotate(0.1deg);
+  }
+}
+
+/* Blob morph — organic border-radius cycling */
+@keyframes blobMorph {
+  0%, 100% { border-radius: 62% 38% 52% 48% / 55% 48% 52% 45%; }
+  20%       { border-radius: 40% 60% 44% 56% / 62% 38% 62% 38%; }
+  40%       { border-radius: 56% 44% 62% 38% / 42% 58% 42% 58%; }
+  60%       { border-radius: 44% 56% 38% 62% / 58% 44% 56% 44%; }
+  80%       { border-radius: 52% 48% 56% 44% / 38% 62% 38% 62%; }
+}
+
+/* Subtle dot-grid background pattern */
+.bg-dot-grid {
+  background-image: radial-gradient(circle, var(--surface-border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Clean thin scrollbar */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-border) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--surface-border);
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--surface-border-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

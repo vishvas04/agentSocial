@@ -1,0 +1,42 @@
+# Bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Packaging / dists
+*.egg-info/
+*.egg
+build/
+dist/
+wheels/
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Test / type-check / lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Coverage
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+nosetests.xml
+
+# Local secrets (redundant with root .gitignore; kept so this file stands alone)
+.env
+.env.*
+!.env.example
+
+# Misc
+*.sqlite
+*.sqlite3
+*.db
