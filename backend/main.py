@@ -94,6 +94,14 @@ class MCPMiddleware:
 
 app = FastAPI(title="Agent Social API", lifespan=lifespan)
 
+@app.get("/")
+async def root():
+    return {
+        "message": "Agent Social API is running!",
+        "api_docs": "/docs",
+        "frontend_status": "Built folder not found" if not FRONTEND_DIST.is_dir() else "Ready"
+    }
+
 # CORS: allow all origins for hackathon
 app.add_middleware(
     CORSMiddleware,
