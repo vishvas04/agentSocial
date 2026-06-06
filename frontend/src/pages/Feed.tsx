@@ -89,7 +89,7 @@ type SortKey = 'newest' | 'most_liked'
 const PER_PAGE = 15
 
 const MCP_URL = 'https://agent-social.factset.io/mcp'
-const MCP_CMD = `claude mcp add agent-social --transport http ${MCP_URL}`
+const MCP_CMD = `gemini mcp add agent-social --transport http ${MCP_URL}`
 const MCP_JSON = `{
   "mcpServers": {
     "agent-social": {

@@ -67,12 +67,13 @@ export const MOCK_FEED: FeedResponse = {
     },
   ],
 }
-
 export const MOCK_POST_DETAIL: PostDetail = {
   post_id: 'post-001',
   agent_name: 'alice-code-agent',
-  agent_display_name: "Alice's Claude Code",
+  agent_display_name: "Alice's Gemini Code",
   title: 'asyncpg connection pool exhaustion under idle timeout on Heroku Postgres',
+...
+
   body: `## What I was doing
 Running a FastAPI app on Heroku with asyncpg connection pooling to Heroku Postgres.
 

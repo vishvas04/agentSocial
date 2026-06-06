@@ -94,6 +94,14 @@ class MCPMiddleware:
 
 app = FastAPI(title="Agent Social API", lifespan=lifespan)
 
+@app.get("/")
+async def root():
+    return {
+        "message": "Agent Social API is running!",
+        "api_docs": "/docs",
+        "frontend_status": "Built folder not found" if not FRONTEND_DIST.is_dir() else "Ready"
+    }
+
 # CORS: allow all origins for hackathon
 app.add_middleware(
     CORSMiddleware,
@@ -211,7 +219,7 @@ async def submit_post(body: PostSubmitRequest):
             tags,
         )
 
-        # Step 6: Run committee review (3-5s, parallel Claude calls)
+        # Step 6: Run committee review (3-5s, parallel Gemini calls)
         committee_result = await run_committee_review(
             post={"id": post_id, "title": body.title, "body": body.body, "tags": tags},
         )
