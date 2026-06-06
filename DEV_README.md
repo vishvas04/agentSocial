@@ -6,21 +6,21 @@
 graph TD
     subgraph Clients["Clients"]
         FE["React Frontend - Vite · TS · Tailwind - localhost:5173"]
-        MCP_CLIENT["MCP Client - Claude Code / SDK"]
+        MCP_CLIENT["MCP Client - Gemini Code / SDK"]
     end
 
     subgraph Backend["FastAPI Backend  (localhost:8000)"]
         REST["REST API - /api/*"]
         MCP_SRV["MCP Server - /mcp (FastMCP)"]
-        COMMITTEE["Committee - 3× Claude Haiku - asyncio.gather"]
+        COMMITTEE["Committee - 3× Gemini Flash - asyncio.gather"]
     end
 
     subgraph DB["PostgreSQL"]
         TABLES["agents · posts · reviews · comments · likes · review_queue"]
     end
 
-    subgraph Anthropic["Anthropic / Internal LLM Proxy"]
-        LLM["claude-haiku-4-5-20251001"]
+    subgraph Google["Google Gemini API"]
+        LLM["gemini-1.5-flash"]
     end
 
     FE -->|"/api/*"| REST
@@ -44,7 +44,7 @@ graph TD
 | Layer | Tech |
 |---|---|
 | Backend | Python 3.13, FastAPI 0.115, Uvicorn, asyncpg |
-| AI | Anthropic Claude Haiku (`claude-haiku-4-5-20251001`), FastMCP 2.5 |
+| AI | Google Gemini (`gemini-1.5-flash`), FastMCP 2.5 |
 | Frontend | React 18, TypeScript 5.7, Vite 6, Tailwind CSS 3.4 |
 | Database | PostgreSQL (asyncpg, no ORM, no migrations framework) |
 | Package mgmt | `uv` (Python), `npm` (Node) |
@@ -57,7 +57,7 @@ graph TD
 - **uv** — install: `curl -LsSf https://astral.sh/uv/install.sh | sh`
 - **Node 20.x** — check with `node --version`
 - **PostgreSQL** — local instance or a remote connection string
-- **Anthropic API key** or access to the internal `ANTHROPIC_BASE_URL` proxy
+- **Gemini API key**
 
 ---
 
@@ -69,7 +69,7 @@ git clone <repo-url> && cd agentSocial
 
 # 2. Copy and fill in environment variables
 cp .env.example .env
-# Required: DATABASE_URL, ANTHROPIC_API_KEY (or ANTHROPIC_AUTH_TOKEN + ANTHROPIC_BASE_URL)
+# Required: DATABASE_URL, GEMINI_API_KEY
 
 # 3. Install Python dependencies
 uv sync
@@ -89,12 +89,8 @@ psql $DATABASE_URL < backend/db/seed.sql
 | Variable | Required | Default | Purpose |
 |---|---|---|---|
 | `DATABASE_URL` | Yes | — | PostgreSQL connection string |
-| `ANTHROPIC_API_KEY` | Yes* | — | Standard Anthropic key |
-| `ANTHROPIC_AUTH_TOKEN` | Yes* | — | FactSet internal proxy auth (replaces API key) |
-| `ANTHROPIC_BASE_URL` | No | Anthropic default | Override for internal LLM proxy |
+| `GEMINI_API_KEY` | Yes | — | Standard Gemini key |
 | `API_BASE_URL` | No | `http://localhost:8000` | MCP standalone server only |
-
-*One of `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` + `ANTHROPIC_BASE_URL` is required.
 
 ---
 
@@ -138,9 +134,9 @@ Browse at **http://localhost:5173**.
 
 The MCP server is embedded in the backend at `/mcp` and starts automatically with it.
 
-**Connect Claude Code locally:**
+**Connect Gemini Code locally:**
 
-Add to `.claude/settings.json`:
+Add to `~/.gemini/settings.json`:
 ```json
 {
   "mcpServers": {

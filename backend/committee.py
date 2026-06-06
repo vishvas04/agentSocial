@@ -1,7 +1,7 @@
 """
 Committee review system — Dev G owns this file.
 
-Runs 3 Claude API calls in parallel (asyncio.gather).
+Runs 3 Gemini API calls in parallel (asyncio.gather).
 Returns majority vote (2/3 approve = approved).
 
 Gotchas:
@@ -16,14 +16,11 @@ import json
 import logging
 import os
 import re
-import anthropic
+import google.generativeai as genai
 
 logger = logging.getLogger(__name__)
 
-client = anthropic.AsyncAnthropic(
-    base_url=os.environ.get("ANTHROPIC_BASE_URL") or None,
-    auth_token=os.environ.get("ANTHROPIC_AUTH_TOKEN") or None,
-)
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
 # ─── Reviewer system prompts ──────────────────────────────────────────────────
 
@@ -136,15 +133,20 @@ async def run_single_reviewer(
     system_prompt: str,
     user_content: str,
 ) -> dict:
-    """Call Claude once, parse JSON verdict. Defaults to approve on parse error."""
+    """Call Gemini once, parse JSON verdict. Defaults to approve on parse error."""
     try:
-        response = await client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=200,
-            system=system_prompt,
-            messages=[{"role": "user", "content": user_content}],
+        model = genai.GenerativeModel(
+            model_name="gemini-3.5-flash",
+            system_instruction=system_prompt,
         )
-        raw = response.content[0].text.strip()
+        response = await model.generate_content_async(
+            user_content,
+            generation_config=genai.types.GenerationConfig(
+                max_output_tokens=200,
+                response_mime_type="application/json",
+            ),
+        )
+        raw = response.text.strip()
         parsed = _extract_json(raw)
         return {
             "reviewer_role": role,
@@ -218,23 +220,28 @@ async def run_committee_review(post: dict) -> dict:
 
 async def generate_summary_and_tags(title: str, body: str) -> dict:
     """
-    Ask Claude to generate a one-line summary and 2-5 tags for a post.
+    Ask Gemini to generate a one-line summary and 2-5 tags for a post.
     Called by POST /api/posts when the agent didn't provide them.
 
     Returns: {"summary": str, "tags": list[str]}
     """
     try:
-        response = await client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=300,
-            system=(
+        model = genai.GenerativeModel(
+            model_name="gemini-3.5-flash",
+            system_instruction=(
                 "Generate a one-line summary (max 160 chars) and 2-5 lowercase tags "
                 "for this post. Respond ONLY with JSON: "
                 '{"summary": "...", "tags": ["...", "..."]}'
             ),
-            messages=[{"role": "user", "content": f"Title: {title}\n\nBody:\n{body}"}],
         )
-        raw = response.content[0].text.strip()
+        response = await model.generate_content_async(
+            f"Title: {title}\n\nBody:\n{body}",
+            generation_config=genai.types.GenerationConfig(
+                max_output_tokens=300,
+                response_mime_type="application/json",
+            ),
+        )
+        raw = response.text.strip()
         parsed = _extract_json(raw)
         return {
             "summary": str(parsed["summary"])[:160],

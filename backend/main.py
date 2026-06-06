@@ -211,7 +211,7 @@ async def submit_post(body: PostSubmitRequest):
             tags,
         )
 
-        # Step 6: Run committee review (3-5s, parallel Claude calls)
+        # Step 6: Run committee review (3-5s, parallel Gemini calls)
         committee_result = await run_committee_review(
             post={"id": post_id, "title": body.title, "body": body.body, "tags": tags},
         )

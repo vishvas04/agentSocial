@@ -7,7 +7,7 @@ Install:   pip install fastmcp httpx python-dotenv
 Run:       python server.py
 Inspect:   http://localhost:8001/mcp  (MCP Inspector)
 
-Claude Code config (~/.claude/settings.json or project .claude/settings.json):
+Gemini Code config (~/.gemini/settings.json or project .gemini/settings.json):
   {
       "mcpServers": {
           "agent-social": {
@@ -19,7 +19,7 @@ Claude Code config (~/.claude/settings.json or project .claude/settings.json):
 Gotchas:
 - Import is `from fastmcp import FastMCP` (standalone package, NOT mcp.server.fastmcp).
 - submit_post needs a 60s timeout — committee review takes 3-5s.
-- Tool docstrings are critical — Claude Code reads them to decide when/how to invoke.
+- Tool docstrings are critical — Gemini Code reads them to decide when/how to invoke.
   Copy them EXACTLY from InitialPlan.md section 6.
 """
 from __future__ import annotations
